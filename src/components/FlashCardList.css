@@ -1,0 +1,388 @@
+/* Flash Card List Container */
+.flash-card-list {
+  margin-bottom: 2rem;
+  width: 100%;
+  padding: 0 1rem; /* Add horizontal padding for mobile */
+}
+
+/* Empty State */
+.flash-card-list .card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Simple Flash Card Styling - Increased size for more text */
+.flash-card {
+  height: 380px; /* Increased from 300px */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+  width: 100%;
+}
+
+.flash-card:hover {
+  transform: translateY(-4px);
+}
+
+/* Simple container - no 3D effects */
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* Show/Hide cards based on flip state */
+.card-front {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.card-back {
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Flipped State - Simple opacity toggle */
+.flash-card.flipped .card-front {
+  opacity: 0;
+}
+
+.flash-card.flipped .card-back {
+  opacity: 1;
+}
+
+/* Card Styling */
+.flash-card .card {
+  height: 100%;
+  width: 100%;
+  border: none;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+}
+
+.flash-card:hover .card {
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+/* Card Headers */
+.flash-card .card-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px 16px 0 0 !important;
+  flex-shrink: 0;
+}
+
+/* Card Bodies - More space for content */
+.flash-card .card-body {
+  padding: 2rem 1.5rem; /* Increased vertical padding */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+  min-height: 0;
+}
+
+/* Card Text - Better sizing for more content */
+.flash-card .card-text {
+  color: #374151;
+  font-weight: 500;
+  line-height: 1.6; /* Better line spacing */
+  margin: 0;
+  font-size: 1.1rem; /* Slightly larger text */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1rem 0.5rem; /* More vertical padding */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  max-height: none; /* Allow text to expand */
+}
+
+/* Small text at bottom - Keep it anchored */
+.flash-card small {
+  color: #9ca3af;
+  font-size: 0.875rem;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+  padding: 0.5rem 0;
+}
+
+/* Question Card Styling */
+.card-front .card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.card-front .card-header .card-title {
+  margin: 0;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Answer Card Styling */
+.card-back .card-header {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.card-back .card-header .card-title {
+  margin: 0;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+/* Section Header Styling */
+.flash-card-list .d-flex.align-items-center h2 {
+  color: #374151;
+  font-weight: 600;
+}
+
+.flash-card-list .badge {
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+}
+
+/* Grid container improvements */
+.flash-card-list .row {
+  margin: 0;
+}
+
+.flash-card-list .row > * {
+  padding: 0.75rem;
+}
+
+/* Responsive Design - Adjusted for larger cards */
+@media (max-width: 992px) {
+  .flash-card-list {
+    padding: 0 0.5rem;
+  }
+  
+  .flash-card {
+    height: 350px; /* Increased from 280px */
+  }
+  
+  .flash-card .card-body {
+    padding: 1.75rem 1.25rem;
+  }
+  
+  .flash-card .card-text {
+    font-size: 1rem;
+    line-height: 1.5;
+    padding: 0.75rem 0.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .flash-card-list {
+    padding: 0 0.25rem;
+  }
+  
+  .flash-card {
+    height: 320px; /* Increased from 260px */
+    margin-bottom: 0.75rem;
+  }
+  
+  .flash-card .card-header {
+    padding: 1rem;
+  }
+  
+  .flash-card .card-body {
+    padding: 1.5rem 1rem;
+  }
+  
+  .flash-card .card-text {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    padding: 0.5rem;
+  }
+  
+  .flash-card .card-title {
+    font-size: 1rem;
+  }
+  
+  /* Stack Clear button on mobile */
+  .flash-card-list .d-flex.justify-content-between {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .flash-card-list .btn {
+    align-self: stretch;
+    width: 100%;
+  }
+  
+  .flash-card-list h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .flash-card-list {
+    padding: 0;
+  }
+  
+  .flash-card {
+    height: 280px; /* Increased from 240px */
+    margin-bottom: 0.5rem;
+  }
+  
+  .flash-card .card {
+    border-radius: 12px;
+  }
+  
+  .flash-card .card-header {
+    padding: 0.75rem;
+  }
+  
+  .flash-card .card-body {
+    padding: 1.25rem 0.75rem;
+  }
+  
+  .flash-card .card-text {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    padding: 0.5rem;
+  }
+  
+  .flash-card .card-title {
+    font-size: 0.95rem;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .flash-card small {
+    font-size: 0.8rem;
+    margin-top: 0.75rem;
+  }
+  
+  .badge {
+    font-size: 0.875rem;
+    padding: 0.375rem 0.75rem;
+  }
+  
+  .flash-card-list .row > * {
+    padding: 0.25rem;
+  }
+  
+  .flash-card-list h2 {
+    font-size: 1.25rem;
+  }
+}
+
+/* Extra small devices (phones in portrait) */
+@media (max-width: 480px) {
+  .flash-card {
+    height: 260px;
+    margin-bottom: 0.5rem;
+  }
+  
+  .flash-card .card-header {
+    padding: 0.5rem;
+  }
+  
+  .flash-card .card-body {
+    padding: 1rem 0.5rem;
+  }
+  
+  .flash-card .card-text {
+    font-size: 0.85rem;
+    line-height: 1.3;
+    padding: 0.25rem;
+  }
+  
+  .flash-card .card-title {
+    font-size: 0.9rem;
+  }
+  
+  .flash-card small {
+    font-size: 0.75rem;
+    margin-top: 0.5rem;
+  }
+  
+  .flash-card-list h2 {
+    font-size: 1.125rem;
+  }
+  
+  .badge {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+/* Touch improvements for mobile */
+@media (hover: none) and (pointer: coarse) {
+  .flash-card {
+    touch-action: manipulation;
+  }
+  
+  .flash-card:hover {
+    transform: none;
+  }
+  
+  .flash-card:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+  
+  .flash-card:hover .card {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  }
+}
+
+/* Simple fade-in animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.flash-card {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+/* Staggered animation delays */
+.flash-card:nth-child(1) { animation-delay: 0.1s; }
+.flash-card:nth-child(2) { animation-delay: 0.15s; }
+.flash-card:nth-child(3) { animation-delay: 0.2s; }
+.flash-card:nth-child(4) { animation-delay: 0.25s; }
+.flash-card:nth-child(5) { animation-delay: 0.3s; }
+.flash-card:nth-child(6) { animation-delay: 0.35s; }

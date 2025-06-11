@@ -1,0 +1,207 @@
+.flash-card-form {
+  margin-bottom: 3rem;
+  animation: formAppear 0.6s ease-out;
+  padding: 0 1rem; /* Add horizontal padding for mobile */
+}
+
+.flash-card-form .card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+}
+
+.flash-card-form .card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 1.5rem;
+}
+
+.flash-card-form .card-title {
+  margin: 0;
+  color: white;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.flash-card-form .card-body {
+  padding: 2rem;
+}
+
+/* Form Styling */
+.flash-card-form .form-label {
+  color: #374151;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.flash-card-form .form-control {
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.9);
+  resize: vertical;
+  min-height: 120px;
+}
+
+.flash-card-form .form-control:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  background: white;
+  outline: none;
+}
+
+.flash-card-form .form-control::placeholder {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* Submit Button */
+.flash-card-form .btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.flash-card-form .btn-primary:hover {
+  background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.flash-card-form .btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .flash-card-form {
+    padding: 0 0.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .flash-card-form .card-body {
+    padding: 1.5rem;
+  }
+  
+  .flash-card-form .card-header {
+    padding: 1rem;
+  }
+  
+  .flash-card-form .card-title {
+    font-size: 1.25rem;
+  }
+  
+  .flash-card-form .form-control {
+    min-height: 100px;
+    padding: 0.875rem;
+  }
+  
+  .flash-card-form .btn-primary {
+    width: 100%;
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .flash-card-form {
+    padding: 0 0.25rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .flash-card-form .card-body {
+    padding: 1rem;
+  }
+  
+  .flash-card-form .card-header {
+    padding: 0.75rem;
+  }
+  
+  .flash-card-form .card-title {
+    font-size: 1.1rem;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .flash-card-form .form-control {
+    min-height: 90px;
+    font-size: 0.95rem;
+    padding: 0.75rem;
+  }
+  
+  .flash-card-form .form-label {
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .flash-card-form .btn-primary {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* Extra small devices (phones in portrait) */
+@media (max-width: 480px) {
+  .flash-card-form {
+    padding: 0;
+    margin-bottom: 1rem;
+  }
+  
+  .flash-card-form .card {
+    border-radius: 0.5rem;
+    margin: 0.5rem 0;
+  }
+  
+  .flash-card-form .card-header {
+    padding: 0.5rem;
+  }
+  
+  .flash-card-form .card-title {
+    font-size: 1rem;
+  }
+  
+  .flash-card-form .card-body {
+    padding: 0.75rem;
+  }
+  
+  .flash-card-form .form-control {
+    min-height: 80px;
+    font-size: 0.9rem;
+    padding: 0.625rem;
+  }
+  
+  .flash-card-form .form-label {
+    font-size: 0.9rem;
+  }
+  
+  .flash-card-form .btn-primary {
+    padding: 0.625rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Animation */
+@keyframes formAppear {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

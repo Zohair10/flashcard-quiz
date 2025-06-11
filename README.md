@@ -1,70 +1,178 @@
-# Getting Started with Create React App
+# 🧠 Flash Card Quiz App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern, responsive web application for creating and studying with interactive flash cards. Built with React and featuring a clean, glassmorphism-inspired UI with smooth animations.
 
-## Available Scripts
+## ✨ Features
 
-In the project directory, you can run:
+- **📚 Study Mode**: Create and manage flash cards with smooth 3D flip animations
+- **🎯 Quiz Mode**: Test your knowledge with randomized questions and self-assessment
+- **📱 Fully Responsive**: Perfect experience on desktop, tablet, and mobile devices
+- **🎨 Modern Design**: Glassmorphism UI with gradient backgrounds and blur effects
+- **⚡ Smooth Animations**: Card flips, hover effects, and page transitions
+- **📊 Progress Tracking**: Real-time score tracking and progress visualization
+- **🔤 Typography**: Clean Inter font for optimal readability
+- **♿ Accessible**: Proper focus states and keyboard navigation
 
-### `npm start`
+## 🚀 Quick Start
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Prerequisites
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Node.js (v14 or higher)
+- npm or yarn
 
-### `npm test`
+### Installation
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+# Navigate to project directory
+cd flashcard-quiz
 
-### `npm run build`
+# Install dependencies
+npm install
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+# Start development server
+npm start
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+The app will open at [http://localhost:3000](http://localhost:3000)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Production Build
 
-### `npm run eject`
+```bash
+npm run build
+npx serve -s build
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🎮 How to Use
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 📖 Study Mode
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. **Add Cards**: Fill out the question and answer form
+2. **View Library**: Browse your cards in a responsive grid
+3. **Interactive Learning**: Click any card to flip and reveal the answer
+4. **Manage Collection**: Clear all cards when needed
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### 🏆 Quiz Mode
 
-## Learn More
+1. **Start Quiz**: Click "Start Quiz" (requires at least one card)
+2. **Think & Answer**: Read questions and formulate your answer
+3. **Reveal & Check**: Show the answer and self-assess
+4. **Track Progress**: Watch your score and progress bar
+5. **Complete & Review**: Get final results with percentage score
+6. **Retake**: Shuffle and restart the quiz anytime
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 🏗️ Project Structure
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+src/
+├── components/
+│   ├── FlashCardForm.js     # Card creation form
+│   ├── FlashCardForm.css    # Form styling
+│   ├── FlashCardList.js     # Card display grid
+│   ├── FlashCardList.css    # Card animations & layout
+│   ├── Quiz.js              # Quiz functionality
+│   └── Quiz.css             # Quiz interface styling
+├── App.js                   # Main application component
+├── App.css                  # Global app styling
+├── index.js                 # React DOM entry point
+└── index.css                # Global CSS reset & utilities
+```
 
-### Code Splitting
+## 🛠️ Tech Stack
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- **React 19.1** - Modern React with hooks
+- **CSS3** - Advanced styling (Grid, Flexbox, Backdrop Filter)
+- **Bootstrap Icons** - Icon library
+- **Google Fonts (Inter)** - Typography
+- **Create React App** - Build tooling
 
-### Analyzing the Bundle Size
+## 🎨 Design System
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Color Palette
 
-### Making a Progressive Web App
+- **Primary Gradient**: `#667eea` → `#764ba2`
+- **Success Gradient**: `#10b981` → `#059669`
+- **Background**: `#f5f7fa` → `#c3cfe2`
+- **Text**: `#374151`, `#64748b`, `#9ca3af`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Typography
 
-### Advanced Configuration
+- **Font Family**: Inter (Google Fonts)
+- **Weights**: 300, 400, 500, 600, 700
+- **Responsive scaling**: 16px → 15px → 14px
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Components
 
-### Deployment
+- **Glassmorphism Cards**: `backdrop-filter: blur(20px)`
+- **3D Flip Animation**: `transform: rotateY(180deg)`
+- **Smooth Transitions**: `cubic-bezier(0.4, 0, 0.2, 1)`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 📱 Responsive Breakpoints
 
-### `npm run build` fails to minify
+- **Desktop**: 1200px+
+- **Tablet**: 768px - 1199px
+- **Mobile**: 320px - 767px
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 🔧 Customization
+
+### Sample Cards
+
+Update initial cards in `App.js`:
+
+```javascript
+const [cards, setCards] = useState([
+  { question: "What is React?", answer: "A JavaScript library..." },
+  // Add your cards here
+]);
+```
+
+### Styling
+
+- **Global styles**: `src/index.css`
+- **App layout**: `src/App.css`
+- **Components**: `src/components/*.css`
+
+### Colors
+
+Modify CSS custom properties in component files for consistent theming.
+
+## 🚨 Troubleshooting
+
+**Development server won't start:**
+
+- Verify Node.js version: `node --version`
+- Clear npm cache: `npm cache clean --force`
+- Delete `node_modules` and reinstall: `rm -rf node_modules && npm install`
+
+**Styling not loading:**
+
+- Hard refresh browser: `Ctrl+F5` / `Cmd+Shift+R`
+- Check browser console for errors
+- Verify CSS imports in components
+
+**Poor performance:**
+
+- Use production build: `npm run build`
+- Check React DevTools for unnecessary re-renders
+
+## 📈 Performance Features
+
+- **Optimized animations** with `transform` and `opacity`
+- **Efficient state management** avoiding unnecessary re-renders
+- **CSS-only animations** for better performance
+- **Responsive images** and optimized assets
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch: `git checkout -b feature/amazing-feature`
+3. Commit changes: `git commit -m 'Add amazing feature'`
+4. Push to branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+## 📄 License
+
+MIT License - feel free to use this project for learning and development.
+
+---
+
+**🚀 Built with modern React and CSS3 • Perfect for learning and productivity**
