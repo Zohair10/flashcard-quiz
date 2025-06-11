@@ -94,11 +94,11 @@ function App() {
     }
   }, [isDarkMode])
 
-  // Debounce search term to improve performance and user experience
+  // Fix debounce delay - reduce from 500ms to 100ms for better responsiveness
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm)
-    }, 500) // Increased delay to 500ms for better full string detection
+    }, 100) // Reduced delay from 500ms to 100ms
 
     return () => {
       clearTimeout(handler)
@@ -161,7 +161,7 @@ function App() {
 
   // Enhanced search with highlights
   const highlightText = useCallback((text, searchTerm) => {
-    if (!searchTerm || searchTerm.length < 2) return text
+    if (!searchTerm || searchTerm.length < 1) return text // Changed from 2 to 1
     const regex = new RegExp(`(${searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
     return text.replace(regex, '<mark>$1</mark>')
   }, [])
@@ -367,23 +367,34 @@ function App() {
     </div>
   )
 
-  // Cards View with Enhanced Search
+  // Cards View with Enhanced Search and Back Button
   const CardsView = () => {
     const searchResults = getSearchResults()
     const isSearching = searchTerm !== debouncedSearchTerm && searchTerm.length > 0
     
     return (
       <div className="cards-view">
+        <button 
+          className="back-btn-top-right"
+          onClick={() => setCurrentView('dashboard')}
+          title="Back to Dashboard"
+        >
+          <i className="back-icon">←</i>
+          <span>Back to Dashboard</span>
+        </button>
+        
         <div className="cards-header">
-          <h1 className="page-title">Your Flash Cards</h1>
-          <p className="page-subtitle">
-            {isSearching 
-              ? `Searching for "${searchTerm}"...`
-              : searchResults.type === 'search' 
-                ? `Found ${searchResults.count} cards matching "${debouncedSearchTerm}"`
-                : `Browse all ${searchResults.count} cards`
-            }
-          </p>
+          <div className="page-title-section">
+            <h1 className="page-title">Your Flash Cards</h1>
+            <p className="page-subtitle">
+              {isSearching 
+                ? `Searching for "${searchTerm}"...`
+                : searchResults.type === 'search' 
+                  ? `Found ${searchResults.count} cards matching "${debouncedSearchTerm}"`
+                  : `Browse all ${searchResults.count} cards`
+              }
+            </p>
+          </div>
         </div>
         
         <div className="enhanced-search-section">
@@ -541,9 +552,20 @@ function App() {
           {currentView === 'cards' && <CardsView />}
           {currentView === 'add' && (
             <div className="add-card-view">
+              <button 
+                className="back-btn-top-right"
+                onClick={() => setCurrentView('dashboard')}
+                title="Back to Dashboard"
+              >
+                <i className="back-icon">←</i>
+                <span>Back to Dashboard</span>
+              </button>
+              
               <div className="add-card-header">
-                <h1 className="page-title">Add New Card</h1>
-                <p className="page-subtitle">Create a new flashcard to expand your knowledge</p>
+                <div className="page-title-section">
+                  <h1 className="page-title">Add New Card</h1>
+                  <p className="page-subtitle">Create a new flashcard to expand your knowledge</p>
+                </div>
               </div>
               <FlashCardForm addCard={addCard} />
             </div>
