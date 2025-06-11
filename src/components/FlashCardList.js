@@ -1,105 +1,155 @@
 import React, { useState } from 'react'
 import './FlashCardList.css'
 
-function FlashCardList({ cards, clearAllCards }) {
+function FlashCardList({ cards, deleteCard, clearAllCards }) {
   const [flippedCards, setFlippedCards] = useState(new Set())
 
   const toggleCard = (index) => {
-    const newFlipped = new Set(flippedCards)
-    if (newFlipped.has(index)) {
-      newFlipped.delete(index)
+    const newFlippedCards = new Set(flippedCards)
+    if (newFlippedCards.has(index)) {
+      newFlippedCards.delete(index)
     } else {
-      newFlipped.add(index)
+      newFlippedCards.add(index)
     }
-    setFlippedCards(newFlipped)
+    setFlippedCards(newFlippedCards)
+  }
+
+  const getDifficultyColor = (difficulty) => {
+    switch (difficulty) {
+      case 'easy': return '#10b981'
+      case 'medium': return '#f59e0b'
+      case 'hard': return '#ef4444'
+      default: return '#6b7280'
+    }
+  }
+
+  const getDifficultyEmoji = (difficulty) => {
+    switch (difficulty) {
+      case 'easy': return '😊'
+      case 'medium': return '🤔'
+      case 'hard': return '😰'
+      default: return '📝'
+    }
   }
 
   if (cards.length === 0) {
     return (
-      <div className="flash-card-list">
-        <div className="card border-0 shadow-sm">
-          <div className="card-body text-center py-5">
-            <i className="bi bi-card-text display-1 text-muted mb-3"></i>
-            <h2 className="h4 text-muted">Your Flash Cards</h2>
-            <p className="text-muted">No flash cards yet. Add your first card above!</p>
-          </div>
-        </div>
+      <div className="empty-state">
+        <div className="empty-icon">📚</div>
+        <h3>No flash cards yet</h3>
+        <p>Create your first flash card to get started!</p>
       </div>
     )
   }
 
   return (
     <div className="flash-card-list">
-      <div className="d-flex align-items-center justify-content-between mb-4">
-        <div className="d-flex align-items-center">
-          <h2 className="h3 mb-0 me-3">
-            <i className="bi bi-collection me-2"></i>
-            Your Flash Cards
-          </h2>
-          <span className="badge bg-primary fs-6">({cards.length})</span>
+      <div className="list-header">
+        <div className="list-stats">
+          <span className="card-count">{cards.length} cards</span>
+          <div className="difficulty-stats">
+            <span className="diff-easy">
+              😊 {cards.filter(c => c.difficulty === 'easy').length}
+            </span>
+            <span className="diff-medium">
+              🤔 {cards.filter(c => c.difficulty === 'medium').length}
+            </span>
+            <span className="diff-hard">
+              😰 {cards.filter(c => c.difficulty === 'hard').length}
+            </span>
+          </div>
         </div>
         
         {cards.length > 0 && (
-          <button 
-            onClick={clearAllCards} 
-            className="btn btn-outline-danger px-4"
-          >
-            <i className="bi bi-trash me-2"></i>
-            Clear All Cards
+          <button onClick={clearAllCards} className="clear-btn">
+            <span className="btn-icon">🗑️</span>
+            Clear All
           </button>
         )}
       </div>
-      
-      <div className="row g-4">
+
+      <div className="cards-grid">
         {cards.map((card, index) => {
           const isFlipped = flippedCards.has(index)
           
           return (
-            <div key={index} className="col-lg-4 col-md-6">
+            <div key={card.id || index} className="card-container">
               <div 
-                className={`flash-card h-100 ${isFlipped ? 'flipped' : ''}`}
+                className={`flash-card ${isFlipped ? 'flipped' : ''}`}
                 onClick={() => toggleCard(index)}
               >
                 <div className="card-inner">
                   {/* Front of card (Question) */}
-                  <div className="card-front card border-0 shadow-sm h-100">
-                    <div className="card-header text-white text-center" style={{background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'}}>
-                      <h5 className="card-title mb-0">
-                        <i className="bi bi-question-circle me-2"></i>
-                        Question
-                      </h5>
+                  <div className="card-front">
+                    <div className="card-header">
+                      <div className="card-type">
+                        <span className="type-icon">❓</span>
+                        <span>Question</span>
+                      </div>
+                      <div className="card-badges">
+                        <span 
+                          className="difficulty-badge"
+                          style={{ backgroundColor: getDifficultyColor(card.difficulty) }}
+                        >
+                          {getDifficultyEmoji(card.difficulty)} {card.difficulty}
+                        </span>
+                        <span className="category-badge">
+                          📁 {card.category}
+                        </span>
+                      </div>
                     </div>
-                    <div className="card-body d-flex flex-column justify-content-center text-center">
-                      <p className="card-text fs-5" style={{color: '#374151', fontWeight: '500'}}>
-                        {card.question}
-                      </p>
-                      <small className="text-muted mt-auto">
-                        <i className="bi bi-cursor-fill me-1"></i>
+                    <div className="card-content">
+                      <p className="card-text">{card.question}</p>
+                      <div className="card-hint">
+                        <span className="hint-icon">👆</span>
                         Click to reveal answer
-                      </small>
+                      </div>
                     </div>
                   </div>
-                  
+
                   {/* Back of card (Answer) */}
-                  <div className="card-back card border-0 shadow-sm h-100">
-                    <div className="card-header text-white text-center" style={{background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)'}}>
-                      <h5 className="card-title mb-0">
-                        <i className="bi bi-lightbulb me-2"></i>
-                        Answer
-                      </h5>
+                  <div className="card-back">
+                    <div className="card-header">
+                      <div className="card-type">
+                        <span className="type-icon">💡</span>
+                        <span>Answer</span>
+                      </div>
+                      <div className="card-badges">
+                        <span 
+                          className="difficulty-badge"
+                          style={{ backgroundColor: getDifficultyColor(card.difficulty) }}
+                        >
+                          {getDifficultyEmoji(card.difficulty)} {card.difficulty}
+                        </span>
+                        <span className="category-badge">
+                          📁 {card.category}
+                        </span>
+                      </div>
                     </div>
-                    <div className="card-body d-flex flex-column justify-content-center text-center">
-                      <p className="card-text fs-5" style={{color: '#374151', fontWeight: '500'}}>
-                        {card.answer}
-                      </p>
-                      <small className="text-muted mt-auto">
-                        <i className="bi bi-cursor-fill me-1"></i>
+                    <div className="card-content">
+                      <p className="card-text">{card.answer}</p>
+                      <div className="card-hint">
+                        <span className="hint-icon">👆</span>
                         Click to see question
-                      </small>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+              
+              {/* Delete button */}
+              <button 
+                className="delete-btn"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  if (window.confirm('Are you sure you want to delete this card?')) {
+                    deleteCard(card.id || index)
+                  }
+                }}
+                title="Delete card"
+              >
+                <span className="delete-icon">✖️</span>
+              </button>
             </div>
           )
         })}
