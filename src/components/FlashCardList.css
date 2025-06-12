@@ -279,113 +279,79 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .cards-grid {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: 1fr;
     gap: 1.5rem;
+    padding: 0 1rem;
   }
   
   .list-header {
     flex-direction: column;
     gap: 1rem;
-    text-align: center;
+    padding: 1.25rem;
   }
   
   .list-stats {
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 1rem;
   }
   
   .difficulty-stats {
+    flex-wrap: wrap;
     justify-content: center;
-  }
-  
-  .flash-card {
-    height: 280px;
-  }
-  
-  .card-header {
-    padding: 1rem;
-  }
-  
-  .card-content {
-    padding: 1rem;
-  }
-  
-  .card-text {
-    font-size: 1rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .cards-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  
-  .flash-card {
-    height: 280px;
-  }
-  
-  .card-header {
-    padding: 1rem 0.75rem;
-    min-height: 80px; /* Increased from 70px to give more space */
-    flex-direction: column; /* Stack items vertically on mobile */
-    align-items: flex-start;
-    gap: 0.75rem;
-  }
-  
-  .card-type {
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    width: 100%;
-  }
-  
-  .type-icon {
-    font-size: 1.1rem;
   }
   
   .card-badges {
     gap: 0.5rem;
-    width: 100%;
-    justify-content: flex-start; /* Align badges to start instead of end */
     flex-wrap: wrap;
   }
   
-  .difficulty-badge,
-  .category-badge {
-    padding: 0.3rem 0.7rem;
-    font-size: 0.75rem;
-    flex-shrink: 0; /* Prevent badges from shrinking */
+  .flash-card {
+    height: auto;
+    min-height: 250px;
   }
-  
-  .card-content {
-    padding: 1rem 0.75rem;
+
+  .card-front,
+  .card-back {
+    padding: 1.25rem;
   }
-  
+
   .card-text {
-    font-size: 0.95rem;
-  }
-  
-  /* Fix delete button positioning on mobile */
-  .delete-btn {
-    opacity: 1;
-    transform: scale(1);
-    top: 8px; /* Move down from top edge */
-    right: 8px; /* Move in from right edge */
-    width: 32px; /* Slightly smaller */
-    height: 32px;
-    z-index: 20; /* Ensure it's above card content */
-  }
-  
-  .delete-btn:hover {
-    transform: scale(1.05); /* Reduced hover scale for mobile */
-  }
-  
-  .delete-icon {
-    font-size: 0.85rem;
+    font-size: 1rem;
+    line-height: 1.5;
   }
 }
 
-/* Extra small mobile devices */
+/* Extra small devices */
+@media (max-width: 480px) {
+  .cards-grid {
+    padding: 0 0.5rem;
+  }
+
+  .flash-card {
+    min-height: 200px;
+  }
+
+  .card-front,
+  .card-back {
+    padding: 1rem;
+  }
+
+  .difficulty-badge,
+  .category-badge {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .delete-btn {
+    width: 36px;
+    height: 36px;
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 @media (max-width: 375px) {
   .card-header {
     padding: 0.875rem 0.625rem;
