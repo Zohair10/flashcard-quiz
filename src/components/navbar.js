@@ -1,56 +1,58 @@
 // src/components/Navbar.js
 import React, { useState } from 'react';
+import './Navbar.css';  // Add this import
 
 export default function Navbar({ onDarkModeToggle, isDark, currentView, onNavigation }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
     { id: 'home', label: 'Home', icon: '🏠' },
+    { id: 'cards', label: 'Cards', icon: '📚' },
     { id: 'add-card', label: 'Add Card', icon: '➕' },
     { id: 'quiz', label: 'Quiz', icon: '🏆' },
-    { id: 'statistics', label: 'Statistics', icon: '📊' },
+    { id: 'settings', label: 'Settings', icon: '⚙️' }
   ];
 
   const handleNavClick = (viewId) => {
     if (onNavigation) {
       onNavigation(viewId);
     }
-    setIsMenuOpen(false); // Close mobile menu after navigation
+    setIsMenuOpen(false);
   };
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <div className="navbar-brand" onClick={() => handleNavClick('home')}>
+        <div 
+          className="navbar-brand" 
+          onClick={() => handleNavClick('home')}
+          role="button"
+          tabIndex={0}
+        >
           <span role="img" aria-label="brain">🧠</span> 
           <span className="brand-text">FlashCards Pro</span>
         </div>
         
         <div className={`navbar-menu ${isMenuOpen ? 'is-active' : ''}`}>
-          <ul className="navbar-links">
-            {navItems.map((item) => (
-              <li key={item.id} className={currentView === item.id ? 'active' : ''}>
-                <button 
-                  onClick={() => handleNavClick(item.id)}
-                  className="nav-link-btn"
-                >
-                  <span className="nav-icon">{item.icon}</span>
-                  {item.label}
-                </button>
-              </li>
-            ))}
-          </ul>
-          
-          <div className="navbar-actions">
+          {navItems.map((item) => (
             <button 
-              className="dark-mode-toggle" 
-              onClick={onDarkModeToggle}
-              aria-label="Toggle dark mode"
-              title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+              key={item.id}
+              onClick={() => handleNavClick(item.id)}
+              className={`nav-item ${currentView === item.id ? 'active' : ''}`}
             >
-              <span>{isDark ? '☀️' : '🌙'}</span>
+              <span className="nav-icon">{item.icon}</span>
+              {item.label}
             </button>
-          </div>
+          ))}
+          
+          <button 
+            className="dark-mode-toggle" 
+            onClick={onDarkModeToggle}
+            aria-label="Toggle dark mode"
+            title={isDark ? "Switch to light mode" : "Switch to dark mode"}
+          >
+            <span>{isDark ? '☀️' : '🌙'}</span>
+          </button>
         </div>
         
         <button 

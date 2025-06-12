@@ -2,6 +2,9 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import FlashCardList from './components/FlashCardList'
 import FlashCardForm from './components/FlashCardForm'
 import Quiz from './components/Quiz'
+import Navbar from './components/navbar'
+import SearchBar from './components/SearchBar'
+import SettingsView from './components/SettingsView'
 import './App.css'
 
 function App() {
@@ -79,11 +82,10 @@ function App() {
     }
   ])
   
-  const [currentView, setCurrentView] = useState('dashboard')
+  const [currentView, setCurrentView] = useState('home')  // Changed from 'dashboard' to 'home'
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('all')
 
   // Dark mode effect
   useEffect(() => {
@@ -147,17 +149,19 @@ function App() {
       const searchLower = debouncedSearchTerm.toLowerCase().trim()
       if (searchLower === '') return true
       
-      // More comprehensive search matching
-      const questionMatch = card.question.toLowerCase().includes(searchLower)
-      const answerMatch = card.answer.toLowerCase().includes(searchLower)
-      const categoryMatch = card.category.toLowerCase().includes(searchLower)
-      const difficultyMatch = card.difficulty.toLowerCase().includes(searchLower)
+      // Full string matching instead of character-by-character
+      const searchWords = searchLower.split(/\s+/).filter(word => word.length > 0)
       
-      const matchesSearch = questionMatch || answerMatch || categoryMatch || difficultyMatch
-      const matchesCategory = selectedCategory === 'all' || card.category === selectedCategory
-      return matchesSearch && matchesCategory
+      return searchWords.every(word => {
+        const questionMatch = card.question.toLowerCase().includes(word)
+        const answerMatch = card.answer.toLowerCase().includes(word)
+        const categoryMatch = card.category.toLowerCase().includes(word)
+        const difficultyMatch = card.difficulty.toLowerCase().includes(word)
+        
+        return questionMatch || answerMatch || categoryMatch || difficultyMatch
+      })
     })
-  }, [cards, debouncedSearchTerm, selectedCategory])
+  }, [cards, debouncedSearchTerm])
 
   // Enhanced search with highlights
   const highlightText = useCallback((text, searchTerm) => {
@@ -175,65 +179,6 @@ function App() {
   const stats = getStats()
   const categories = [...new Set(cards.map(card => card.category))]
 
-  // Modern Navbar Component
-  const Navbar = () => (
-    <nav className="modern-navbar">
-      <div className="navbar-container">
-        <div className="navbar-brand">
-          <div className="brand-icon">🧠</div>
-          <span className="brand-text">FlashCards Pro</span>
-        </div>
-        
-        <div className="navbar-menu">
-          <button 
-            className={`nav-item ${currentView === 'dashboard' ? 'active' : ''}`}
-            onClick={() => setCurrentView('dashboard')}
-          >
-            <i className="icon">📊</i>
-            <span>Dashboard</span>
-          </button>
-          <button 
-            className={`nav-item ${currentView === 'cards' ? 'active' : ''}`}
-            onClick={() => setCurrentView('cards')}
-          >
-            <i className="icon">📚</i>
-            <span>Cards</span>
-          </button>
-          <button 
-            className={`nav-item ${currentView === 'add' ? 'active' : ''}`}
-            onClick={() => setCurrentView('add')}
-          >
-            <i className="icon">➕</i>
-            <span>Add Card</span>
-          </button>
-          <button 
-            className={`nav-item ${currentView === 'quiz' ? 'active' : ''}`}
-            onClick={() => setCurrentView('quiz')}
-          >
-            <i className="icon">🏆</i>
-            <span>Quiz</span>
-          </button>
-          <button 
-            className={`nav-item ${currentView === 'settings' ? 'active' : ''}`}
-            onClick={() => setCurrentView('settings')}
-          >
-            <i className="icon">⚙️</i>
-            <span>Settings</span>
-          </button>
-        </div>
-
-        <div className="navbar-actions">
-          <button className="search-btn" onClick={() => setCurrentView('cards')}>
-            <i className="icon">🔍</i>
-          </button>
-          <button className="dark-mode-toggle" onClick={toggleDarkMode}>
-            <i className="icon">{isDarkMode ? '☀️' : '🌙'}</i>
-          </button>
-        </div>
-      </div>
-    </nav>
-  )
-
   // Dashboard View
   const DashboardView = () => (
     <div className="dashboard">
@@ -246,7 +191,7 @@ function App() {
         {/* Quick Stats Widget */}
         <div className="widget stats-widget">
           <div className="widget-header">
-            <h3>📊 Quick Stats</h3>
+            <h3>📊 Learning Overview</h3>
           </div>
           <div className="widget-content">
             <div className="stat-item">
@@ -258,8 +203,16 @@ function App() {
               <div className="stat-label">Categories</div>
             </div>
             <div className="stat-item">
-              <div className="stat-number">{stats.difficulties.easy + stats.difficulties.medium + stats.difficulties.hard}</div>
-              <div className="stat-label">Ready to Study</div>
+              <div className="stat-number">{stats.difficulties.easy}</div>
+              <div className="stat-label">Easy Cards</div>
+            </div>
+            <div className="stat-item">
+              <div className="stat-number">{stats.difficulties.medium}</div>
+              <div className="stat-label">Medium Cards</div>
+            </div>
+            <div className="stat-item">
+              <div className="stat-number">{stats.difficulties.hard}</div>
+              <div className="stat-label">Hard Cards</div>
             </div>
           </div>
         </div>
@@ -289,89 +242,185 @@ function App() {
           </div>
         </div>
 
-        {/* Progress Widget */}
-        <div className="widget progress-widget">
+        {/* Categories Overview Widget */}
+        <div className="widget categories-widget">
           <div className="widget-header">
-            <h3>📈 Study Progress</h3>
+            <h3>📁 Categories</h3>
           </div>
           <div className="widget-content">
-            <div className="progress-item">
-              <div className="progress-label">
-                <span>Easy Cards</span>
-                <span>{stats.difficulties.easy}</span>
+            {categories.length > 0 ? (
+              categories.map(category => {
+                const count = cards.filter(card => card.category === category).length
+                return (
+                  <div key={category} className="category-item">
+                    <div className="category-info">
+                      <span className="category-icon">
+                        {category === 'WebDev' ? '💻' : category === 'General Knowledge' ? '🌍' : '📝'}
+                      </span>
+                      <span className="category-name">{category}</span>
+                    </div>
+                    <span className="category-count">{count}</span>
+                  </div>
+                )
+              })
+            ) : (
+              <div className="empty-state">
+                <p>No categories yet</p>
+                <button 
+                  className="create-btn"
+                  onClick={() => setCurrentView('add')}
+                >
+                  Create your first card
+                </button>
               </div>
-              <div className="progress-bar">
-                <div 
-                  className="progress-fill easy" 
-                  style={{width: `${(stats.difficulties.easy / Math.max(stats.total, 1)) * 100}%`}}
-                ></div>
-              </div>
-            </div>
-            <div className="progress-item">
-              <div className="progress-label">
-                <span>Medium Cards</span>
-                <span>{stats.difficulties.medium}</span>
-              </div>
-              <div className="progress-bar">
-                <div 
-                  className="progress-fill medium" 
-                  style={{width: `${(stats.difficulties.medium / Math.max(stats.total, 1)) * 100}%`}}
-                ></div>
-              </div>
-            </div>
-            <div className="progress-item">
-              <div className="progress-label">
-                <span>Hard Cards</span>
-                <span>{stats.difficulties.hard}</span>
-              </div>
-              <div className="progress-bar">
-                <div 
-                  className="progress-fill hard" 
-                  style={{width: `${(stats.difficulties.hard / Math.max(stats.total, 1)) * 100}%`}}
-                ></div>
-              </div>
-            </div>
+            )}
           </div>
         </div>
 
-        {/* Recent Activity Widget */}
-        <div className="widget activity-widget">
+        {/* Study Progress Widget */}
+        <div className="widget progress-widget">
           <div className="widget-header">
-            <h3>🔥 Recent Activity</h3>
+            <h3>📈 Difficulty Distribution</h3>
           </div>
           <div className="widget-content">
-            <div className="activity-item">
-              <div className="activity-icon">📝</div>
-              <div className="activity-text">
-                <div>Last card added</div>
-                <div className="activity-time">2 hours ago</div>
+            {stats.total > 0 ? (
+              <>
+                <div className="progress-item">
+                  <div className="progress-label">
+                    <span>🟢 Easy</span>
+                    <span>{stats.difficulties.easy}</span>
+                  </div>
+                  <div className="progress-bar">
+                    <div 
+                      className="progress-fill easy" 
+                      style={{width: `${(stats.difficulties.easy / stats.total) * 100}%`}}
+                    ></div>
+                  </div>
+                </div>
+                <div className="progress-item">
+                  <div className="progress-label">
+                    <span>🟡 Medium</span>
+                    <span>{stats.difficulties.medium}</span>
+                  </div>
+                  <div className="progress-bar">
+                    <div 
+                      className="progress-fill medium" 
+                      style={{width: `${(stats.difficulties.medium / stats.total) * 100}%`}}
+                    ></div>
+                  </div>
+                </div>
+                <div className="progress-item">
+                  <div className="progress-label">
+                    <span>🔴 Hard</span>
+                    <span>{stats.difficulties.hard}</span>
+                  </div>
+                  <div className="progress-bar">
+                    <div 
+                      className="progress-fill hard" 
+                      style={{width: `${(stats.difficulties.hard / stats.total) * 100}%`}}
+                    ></div>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="empty-state">
+                <p>No cards to analyze yet</p>
+                <button 
+                  className="create-btn"
+                  onClick={() => setCurrentView('add')}
+                >
+                  Add your first card
+                </button>
               </div>
-            </div>
-            <div className="activity-item">
-              <div className="activity-icon">🏆</div>
-              <div className="activity-text">
-                <div>Quiz completed</div>
-                <div className="activity-time">Yesterday</div>
-              </div>
-            </div>
-            <div className="activity-item">
-              <div className="activity-icon">📚</div>
-              <div className="activity-text">
-                <div>Study session</div>
-                <div className="activity-time">2 days ago</div>
-              </div>
-            </div>
+            )}
           </div>
         </div>
+
+        {/* Getting Started Widget (only show if no cards) */}
+        {stats.total === 0 && (
+          <div className="widget getting-started-widget">
+            <div className="widget-header">
+              <h3>🚀 Getting Started</h3>
+            </div>
+            <div className="widget-content">
+              <div className="steps-list">
+                <div className="step-item">
+                  <div className="step-number">1</div>
+                  <div className="step-text">
+                    <h4>Create Your First Card</h4>
+                    <p>Start by adding a question and answer pair</p>
+                  </div>
+                </div>
+                <div className="step-item">
+                  <div className="step-number">2</div>
+                  <div className="step-text">
+                    <h4>Browse Your Cards</h4>
+                    <p>Review and manage your flashcards</p>
+                  </div>
+                </div>
+                <div className="step-item">
+                  <div className="step-number">3</div>
+                  <div className="step-text">
+                    <h4>Take a Quiz</h4>
+                    <p>Test your knowledge with interactive quizzes</p>
+                  </div>
+                </div>
+              </div>
+              <button 
+                className="get-started-btn"
+                onClick={() => setCurrentView('add')}
+              >
+                Let's Get Started! 🎯
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
+
+  // Enhanced search input to handle full input on Enter key
+  const handleSearchKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      setDebouncedSearchTerm(searchTerm.trim())
+    }
+  }
+
+  // Handle navigation between views
+  const handleNavigation = (view) => {
+    const viewMapping = {
+      'home': 'home',
+      'add-card': 'add',
+      'cards': 'cards',
+      'quiz': 'quiz',
+      'settings': 'settings',
+      'statistics': 'statistics'
+    }
+    setCurrentView(viewMapping[view] || view)
+  }
 
   // Cards View with Enhanced Search and Back Button
   const CardsView = () => {
     const searchResults = getSearchResults()
     const isSearching = searchTerm !== debouncedSearchTerm && searchTerm.length > 0
     
+    // Simplified description without category filtering
+    const getFilteredDescription = () => {
+      if (isSearching) {
+        return `Searching for "${searchTerm}"...`
+      }
+      
+      if (debouncedSearchTerm.length > 0) {
+        return `Found ${filteredCards.length} cards matching "${debouncedSearchTerm}"`
+      } else {
+        return `Browse all ${filteredCards.length} cards`
+      }
+    }
+    
+    const handleSearch = (searchValue) => {
+      setDebouncedSearchTerm(searchValue);
+    };
+
     return (
       <div className="cards-view">
         <button 
@@ -387,100 +436,20 @@ function App() {
           <div className="page-title-section">
             <h1 className="page-title">Your Flash Cards</h1>
             <p className="page-subtitle">
-              {isSearching 
-                ? `Searching for "${searchTerm}"...`
-                : searchResults.type === 'search' 
-                  ? `Found ${searchResults.count} cards matching "${debouncedSearchTerm}"`
-                  : `Browse all ${searchResults.count} cards`
-              }
+              {getFilteredDescription()}
             </p>
           </div>
         </div>
         
         <div className="enhanced-search-section">
           <div className="search-container">
-            <div className="search-input-wrapper">
-              <input
-                type="text"
-                placeholder="Search by question, answer, category, or difficulty..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className={`enhanced-search-input ${isSearching ? 'searching' : ''}`}
-              />
-              <div className="search-icons">
-                {isSearching ? (
-                  <div className="search-loading">⏳</div>
-                ) : (
-                  <i className="search-icon">🔍</i>
-                )}
-                {searchTerm && (
-                  <button 
-                    className="clear-search"
-                    onClick={() => {
-                      setSearchTerm('')
-                      setDebouncedSearchTerm('')
-                    }}
-                    title="Clear search"
-                  >
-                    ✕
-                  </button>
-                )}
-              </div>
-            </div>
-            
-            <div className="search-filters">
-              <select 
-                value={selectedCategory} 
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="enhanced-category-filter"
-              >
-                <option value="all">📁 All Categories</option>
-                {categories.map(category => (
-                  <option key={category} value={category}>
-                    {category === 'WebDev' ? '💻' : '🌍'} {category}
-                  </option>
-                ))}
-              </select>
-              
-              <div className="search-stats">
-                <span className="results-count">
-                  {isSearching ? 'Searching...' : `${filteredCards.length} result${filteredCards.length !== 1 ? 's' : ''}`}
-                </span>
-              </div>
+            <SearchBar onSearch={handleSearch} />
+            <div className="search-stats">
+              <span className="results-count">
+                {`${filteredCards.length} result${filteredCards.length !== 1 ? 's' : ''}`}
+              </span>
             </div>
           </div>
-          
-          {searchTerm && !isSearching && (
-            <div className="search-suggestions">
-              <div className="suggestion-label">💡 Quick suggestions:</div>
-              <div className="suggestion-tags">
-                <button 
-                  className="suggestion-tag"
-                  onClick={() => setSearchTerm('React')}
-                >
-                  React
-                </button>
-                <button 
-                  className="suggestion-tag"
-                  onClick={() => setSearchTerm('easy')}
-                >
-                  Easy questions
-                </button>
-                <button 
-                  className="suggestion-tag"
-                  onClick={() => setSearchTerm('WebDev')}
-                >
-                  Web Development
-                </button>
-                <button 
-                  className="suggestion-tag"
-                  onClick={() => setSearchTerm('General Knowledge')}
-                >
-                  General Knowledge
-                </button>
-              </div>
-            </div>
-          )}
         </div>
         
         <FlashCardList 
@@ -489,78 +458,28 @@ function App() {
           clearAllCards={clearAllCards}
           searchTerm={debouncedSearchTerm}
           highlightText={highlightText}
+          totalCards={cards.length}
         />
       </div>
     )
   }
 
-  // Settings View
-  const SettingsView = () => (
-    <div className="settings-view">
-      <div className="settings-header">
-        <h1 className="page-title">Settings</h1>
-        <p className="page-subtitle">Customize your learning experience</p>
-      </div>
-      
-      <div className="settings-grid">
-        <div className="setting-group">
-          <h3>🎨 Appearance</h3>
-          <div className="setting-item">
-            <label>Dark Mode</label>
-            <button 
-              className={`toggle-switch ${isDarkMode ? 'active' : ''}`}
-              onClick={toggleDarkMode}
-            >
-              <div className="toggle-slider"></div>
-            </button>
-          </div>
-        </div>
-
-        <div className="setting-group">
-          <h3>📊 Data Management</h3>
-          <div className="setting-item">
-            <label>Total Cards: {cards.length}</label>
-            <button className="danger-btn" onClick={clearAllCards}>
-              Clear All Cards
-            </button>
-          </div>
-        </div>
-
-        <div className="setting-group">
-          <h3>🏆 Quiz Settings</h3>
-          <div className="setting-item">
-            <label>Default Quiz Length</label>
-            <select className="setting-select">
-              <option>5 cards</option>
-              <option>10 cards</option>
-              <option>All cards</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-
   // Main render
   return (
     <div className={`app ${isDarkMode ? 'dark-mode' : ''}`}>
-      <Navbar />
+      <Navbar 
+        onDarkModeToggle={toggleDarkMode}
+        isDark={isDarkMode}
+        currentView={currentView}
+        onNavigation={handleNavigation}
+      />
       
       <main className="main-content">
         <div className="container">
-          {currentView === 'dashboard' && <DashboardView />}
+          {(currentView === 'home' || currentView === 'dashboard') && <DashboardView />}
           {currentView === 'cards' && <CardsView />}
-          {currentView === 'add' && (
+          {(currentView === 'add' || currentView === 'add-card') && (
             <div className="add-card-view">
-              <button 
-                className="back-btn-top-right"
-                onClick={() => setCurrentView('dashboard')}
-                title="Back to Dashboard"
-              >
-                <i className="back-icon">←</i>
-                <span>Back to Dashboard</span>
-              </button>
-              
               <div className="add-card-header">
                 <div className="page-title-section">
                   <h1 className="page-title">Add New Card</h1>
@@ -570,8 +489,15 @@ function App() {
               <FlashCardForm addCard={addCard} />
             </div>
           )}
-          {currentView === 'quiz' && <Quiz cards={cards} onExit={() => setCurrentView('dashboard')} />}
-          {currentView === 'settings' && <SettingsView />}
+          {currentView === 'quiz' && <Quiz cards={cards} onExit={() => handleNavigation('home')} />}
+          {currentView === 'settings' && (
+            <SettingsView 
+              cards={cards}
+              isDarkMode={isDarkMode}
+              toggleDarkMode={toggleDarkMode}
+              clearAllCards={clearAllCards}
+            />
+          )}
         </div>
       </main>
     </div>

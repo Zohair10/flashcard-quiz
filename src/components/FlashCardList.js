@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './FlashCardList.css'
 
-function FlashCardList({ cards, deleteCard, clearAllCards }) {
+function FlashCardList({ cards, deleteCard, clearAllCards, searchTerm, highlightText, totalCards }) {
   const [flippedCards, setFlippedCards] = useState(new Set())
 
   const toggleCard = (index) => {
@@ -32,12 +32,33 @@ function FlashCardList({ cards, deleteCard, clearAllCards }) {
     }
   }
 
+  // Helper function to render text with highlights
+  const renderHighlightedText = (text, searchTerm) => {
+    if (!searchTerm || !highlightText) {
+      return text
+    }
+    return <span dangerouslySetInnerHTML={{ __html: highlightText(text, searchTerm) }} />
+  }
+
   if (cards.length === 0) {
     return (
       <div className="empty-state">
         <div className="empty-icon">📚</div>
-        <h3>No flash cards yet</h3>
-        <p>Create your first flash card to get started!</p>
+        <h3>No flash cards found</h3>
+        <p>
+          {searchTerm 
+            ? `No cards match "${searchTerm}"` 
+            : 'Create your first flash card to get started!'
+          }
+        </p>
+        {searchTerm && (
+          <button 
+            className="create-btn"
+            onClick={() => window.location.reload()}
+          >
+            Clear search
+          </button>
+        )}
       </div>
     )
   }
@@ -46,7 +67,9 @@ function FlashCardList({ cards, deleteCard, clearAllCards }) {
     <div className="flash-card-list">
       <div className="list-header">
         <div className="list-stats">
-          <span className="card-count">{cards.length} cards</span>
+          <span className="card-count">
+            {cards.length} of {totalCards} card{cards.length !== 1 ? 's' : ''}
+          </span>
           <div className="difficulty-stats">
             <span className="diff-easy">
               😊 {cards.filter(c => c.difficulty === 'easy').length}
@@ -60,10 +83,10 @@ function FlashCardList({ cards, deleteCard, clearAllCards }) {
           </div>
         </div>
         
-        {cards.length > 0 && (
+        {cards.length > 0 && totalCards > 0 && (
           <button onClick={clearAllCards} className="clear-btn">
             <span className="btn-icon">🗑️</span>
-            Clear All
+            Clear All ({totalCards})
           </button>
         )}
       </div>
@@ -91,15 +114,15 @@ function FlashCardList({ cards, deleteCard, clearAllCards }) {
                           className="difficulty-badge"
                           style={{ backgroundColor: getDifficultyColor(card.difficulty) }}
                         >
-                          {getDifficultyEmoji(card.difficulty)} {card.difficulty}
+                          {getDifficultyEmoji(card.difficulty)} {renderHighlightedText(card.difficulty, searchTerm)}
                         </span>
                         <span className="category-badge">
-                          📁 {card.category}
+                          📁 {renderHighlightedText(card.category, searchTerm)}
                         </span>
                       </div>
                     </div>
                     <div className="card-content">
-                      <p className="card-text">{card.question}</p>
+                      <p className="card-text">{renderHighlightedText(card.question, searchTerm)}</p>
                       <div className="card-hint">
                         <span className="hint-icon">👆</span>
                         Click to reveal answer
@@ -119,15 +142,15 @@ function FlashCardList({ cards, deleteCard, clearAllCards }) {
                           className="difficulty-badge"
                           style={{ backgroundColor: getDifficultyColor(card.difficulty) }}
                         >
-                          {getDifficultyEmoji(card.difficulty)} {card.difficulty}
+                          {getDifficultyEmoji(card.difficulty)} {renderHighlightedText(card.difficulty, searchTerm)}
                         </span>
                         <span className="category-badge">
-                          📁 {card.category}
+                          📁 {renderHighlightedText(card.category, searchTerm)}
                         </span>
                       </div>
                     </div>
                     <div className="card-content">
-                      <p className="card-text">{card.answer}</p>
+                      <p className="card-text">{renderHighlightedText(card.answer, searchTerm)}</p>
                       <div className="card-hint">
                         <span className="hint-icon">👆</span>
                         Click to see question
